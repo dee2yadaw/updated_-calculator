@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Percentage Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 15px;
+      background-color: #f0f2f5;
+    }
+
+    .calculator {
+      background-color: white;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+      font-size: 1.8em;
+    }
+
+    .calc-group {
+      margin-bottom: 30px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      width: 120px;
+      flex-shrink: 0;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .result {
+      margin-top: 15px;
+      padding: 12px;
+      background-color: #e8f4fc;
+      border-radius: 6px;
+      color: #2c3e50;
+      font-size: 16px;
+    }
+
+    .tips {
+      margin-top: 25px;
+      font-size: 0.9em;
+      color: #7f8c8d;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 480px) {
+      .calculator {
+        padding: 15px;
+        margin: 10px auto;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+
+      .input-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+
+      input {
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto;
+      }
+
+      .calc-group h3 {
+        font-size: 1em;
+        text-align: center;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 15px;
+      }
+    }
+
+    /* New style for discount price */
+    .discount-price {
+      color: #27ae60;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h1>Percentage Calculator</h1>
+    
+    <!-- Discount Calculator -->
+    <div class="calc-group">
+      <h3>Discount Calculator</h3>
+      <div class="input-group">
+        <input type="number" id="discountPercent" placeholder="Discount %">
+        <span>off</span>
+        <input type="number" id="originalPrice" placeholder="Original Price">
+      </div>
+      <button onclick="calculateDiscount()">Calculate</button>
+      <div class="result" id="result4"></div>
+    </div>
+    
+    <!-- What is X% of Y -->
+    <div class="calc-group">
+      <h3>What is X% of Y?</h3>
+      <div class="input-group">
+        <input type="number" id="percent1" placeholder="X %">
+        <span>of</span>
+        <input type="number" id="number1" placeholder="Y">
+      </div>
+      <button onclick="calculatePercentage()">Calculate</button>
+      <div class="result" id="result1"></div>
+    </div>
+
+    <!-- X is what percent of Y -->
+    <div class="calc-group">
+      <h3>X is what percent of Y?</h3>
+      <div class="input-group">
+        <input type="number" id="value2" placeholder="X">
+        <span>is what percent of</span>
+        <input type="number" id="number2" placeholder="Y">
+      </div>
+      <button onclick="calculatePercentageOf()">Calculate</button>
+      <div class="result" id="result2"></div>
+    </div>
+
+    <!-- Percentage increase/decrease -->
+    <div class="calc-group">
+      <h3>Percentage Increase/Decrease</h3>
+      <div class="input-group">
+        <input type="number" id="original" placeholder="Original">
+        <span>to</span>
+        <input type="number" id="final" placeholder="Final">
+      </div>
+      <button onclick="calculateChange()">Calculate</button>
+      <div class="result" id="result3"></div>
+    </div>
+
+    <div class="tips">
+      Tips: Use tab to navigate fields<br>
+      Shift+tab to go back<br>
+      Press Enter to calculate
+    </div>
+  </div>
+
+  <script>
+    // Handle Enter key press for all input fields
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.target.closest('.calc-group').querySelector('button').click();
+        }
+      });
+    });
+
+    function calculateDiscount() {
+      const discount = parseFloat(document.getElementById('discountPercent').value);
+      const originalPrice = parseFloat(document.getElementById('originalPrice').value);
+      
+      if (!isNaN(discount) && !isNaN(originalPrice)) {
+        const discountAmount = (originalPrice * discount) / 100;
+        const finalPrice = originalPrice - discountAmount;
+        
+        document.getElementById('result4').innerHTML = `
+          You save: <span class="discount-price">₹${discountAmount.toFixed(2)}</span><br>
+          Final Price: <span class="discount-price">₹${finalPrice.toFixed(2)}</span>
+        `;
+      }
+    }
+
+    function calculatePercentage() {
+      const percent = parseFloat(document.getElementById('percent1').value);
+      const number = parseFloat(document.getElementById('number1').value);
+      if (!isNaN(percent) && !isNaN(number)) {
+        const result = (percent / 100) * number;
+        document.getElementById('result1').textContent = `${percent}% of ${number} = ${result.toFixed(2)}`;
+      }
+    }
+
+    function calculatePercentageOf() {
+      const value = parseFloat(document.getElementById('value2').value);
+      const number = parseFloat(document.getElementById('number2').value);
+      if (!isNaN(value) && !isNaN(number) && number !== 0) {
+        const result = (value / number) * 100;
+        document.getElementById('result2').textContent = `${value} is ${result.toFixed(2)}% of ${number}`;
+      }
+    }
+
+    function calculateChange() {
+      const original = parseFloat(document.getElementById('original').value);
+      const final = parseFloat(document.getElementById('final').value);
+      if (!isNaN(original) && !isNaN(final) && original !== 0) {
+        const change = ((final - original) / original) * 100;
+        document.getElementById('result3').textContent = 
+          `${change >= 0 ? 'Increase' : 'Decrease'} of ${Math.abs(change).toFixed(2)}% (${original} → ${final})`;
+      }
+    }
+  </script>
+</body>
+</html>
